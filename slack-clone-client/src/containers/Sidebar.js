@@ -1,38 +1,26 @@
 import React from 'react';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
-import findIndex from 'lodash/findIndex';
 import decode from 'jwt-decode';
+
 import Channels from '../components/Channels';
 import Teams from '../components/Teams';
 import AddChannelModal from '../components/addChannelModal';
-import allTeamsQuery from '../graphql/team';
 
-
-class Sidebar extends React.Component {
-
-  state={
+export default class Sidebar extends React.Component {
+  state = {
     openAddChannelModal: false,
-  }
+  };
 
-  handleCloseChannelClick= () => {
+  handleCloseAddChannelModal = () => {
     this.setState({ openAddChannelModal: false });
-  }
+  };
 
-  handleAddChannelClick= () => {
+  handleAddChannelClick = () => {
     this.setState({ openAddChannelModal: true });
-  }
+  };
 
+  render() {
+    const { teams, team } = this.props;
 
-  render(){
-
-    const { data: { loading, allTeams }, currentTeamId } = this.props;
-    if (loading) {
-      return null;
-    }
-
-    const teamIdx = currentTeamId ? findIndex(allTeams, ['id', parseInt(currentTeamId, 10)]) : 0;
-    const team = allTeams[teamIdx];
     let username = '';
     try {
       const token = localStorage.getItem('token');
@@ -42,29 +30,22 @@ class Sidebar extends React.Component {
     } catch (err) {}
 
     return [
-      <Teams
-        key="team-sidebar"
-        teams={allTeams.map(t => ({
-          id: t.id,
-          letter: t.name.charAt(0).toUpperCase(),
-        }))}
-      />,
+      <Teams key="team-sidebar" teams={teams} />,
       <Channels
         key="channels-sidebar"
         teamName={team.name}
-        teamId={team.id}
         username={username}
+        teamId={team.id}
         channels={team.channels}
         users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
         onAddChannelClick={this.handleAddChannelClick}
-        />,
-      <AddChannelModal 
-      teamId={team.id}
-      open={this.state.openAddChannelModal} 
-      onClose={this.handleCloseChannelClick} 
-      key='sidebar-add-channel-modal'></AddChannelModal>
+      />,
+      <AddChannelModal
+        teamId={team.id}
+        onClose={this.handleCloseAddChannelModal}
+        open={this.state.openAddChannelModal}
+        key="sidebar-add-channel-modal"
+      />,
     ];
-  };
+  }
 }
-
-export default graphql(allTeamsQuery)(Sidebar);

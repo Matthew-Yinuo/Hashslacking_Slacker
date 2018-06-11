@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-const sequelize = new Sequelize('slackin', 'postgres', 'matt', {
+const sequelize = new Sequelize('SlackDB', 'postgres', 'slack', {
   dialect: 'postgres',
   operatorsAliases: Sequelize.Op,
   define: {
