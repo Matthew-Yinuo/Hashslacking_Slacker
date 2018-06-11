@@ -6,6 +6,8 @@
     "apollo-cache-inmemory": "^1.1.9",
     "apollo-client-preset": "^1.0.8",
     "apollo-link-http": "^1.5.2",
+    "apollo-link-context": "^1.0.0",
+    "apollo-link": "^1.0.0",
     "bcrypt": "^1.0.3",
     "eslint": "^4.18.2",
     "graphql-tag": "^2.8.0",
@@ -15,7 +17,12 @@
     "react-apollo": "^2.0.4",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.1"
+    "react-scripts": "1.1.1",
+    "jwt-decode": "^2.2.0",
+    "lodash": "^4.17.4",
+    "semantic-ui-css": "^2.2.12",
+    "semantic-ui-react": "^0.74.2",
+    "styled-components": "^2.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
