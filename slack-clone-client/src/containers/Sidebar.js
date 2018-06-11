@@ -6,7 +6,6 @@ import decode from 'jwt-decode';
 import Channels from '../components/Channels';
 import Teams from '../components/Teams';
 import AddChannelModal from '../components/addChannelModal';
-
 class Sidebar extends React.Component {
 
   state={
@@ -55,7 +54,11 @@ class Sidebar extends React.Component {
         users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
         onAddChannelClick={this.handleAddChannelClick}
         />,
-      <AddChannelModal open={this.state.openAddChannelModal} onClose={this.handleCloseChannelClick} key='sidebar-add-channel-modal'></AddChannelModal>
+      <AddChannelModal 
+      teamId={currentTeamId}
+      open={this.state.openAddChannelModal} 
+      onClose={this.handleCloseChannelClick} 
+      key='sidebar-add-channel-modal'></AddChannelModal>
     ];
   };
 }
