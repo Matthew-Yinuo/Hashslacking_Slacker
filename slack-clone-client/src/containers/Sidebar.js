@@ -6,6 +6,9 @@ import decode from 'jwt-decode';
 import Channels from '../components/Channels';
 import Teams from '../components/Teams';
 import AddChannelModal from '../components/addChannelModal';
+import allTeamsQuery from '../graphql/team';
+
+
 class Sidebar extends React.Component {
 
   state={
@@ -49,31 +52,19 @@ class Sidebar extends React.Component {
       <Channels
         key="channels-sidebar"
         teamName={team.name}
+        teamId={team.id}
         username={username}
         channels={team.channels}
         users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
         onAddChannelClick={this.handleAddChannelClick}
         />,
       <AddChannelModal 
-      teamId={currentTeamId}
+      teamId={team.id}
       open={this.state.openAddChannelModal} 
       onClose={this.handleCloseChannelClick} 
       key='sidebar-add-channel-modal'></AddChannelModal>
     ];
   };
 }
-
-const allTeamsQuery = gql`
-  {
-    allTeams {
-      id
-      name
-      channels {
-        id
-        name
-      }
-    }
-  }
-`;
 
 export default graphql(allTeamsQuery)(Sidebar);
