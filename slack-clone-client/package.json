@@ -10,6 +10,7 @@
     "apollo-link": "^1.0.0",
     "bcrypt": "^1.0.3",
     "eslint": "^4.18.2",
+    "formik": "^0.9.4",
     "graphql-tag": "^2.8.0",
     "mobx": "^4.1.0",
     "mobx-react": "^5.0.0",
