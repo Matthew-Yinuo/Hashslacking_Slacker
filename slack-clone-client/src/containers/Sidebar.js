@@ -28,11 +28,9 @@ export default class Sidebar extends React.Component {
     this.setState({ openInvitePeopleModal: false });
   };
 
-
   render() {
     const { teams, team } = this.props;
-
-    const {openAddChannelModal, openInvitePeopleModal} = this.state
+    const { openInvitePeopleModal, openAddChannelModal } = this.state;
 
     let username = '';
     try {
@@ -65,8 +63,7 @@ export default class Sidebar extends React.Component {
         onClose={this.handleCloseInvitePeopleModal}
         open={openInvitePeopleModal}
         key="invite-people-modal"
-        />,
-      
+      />,
     ];
   }
 }
