@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Form, Input, Button, Modal } from 'semantic-ui-react';
 import { withFormik } from 'formik';
