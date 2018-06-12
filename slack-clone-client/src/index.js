@@ -7,7 +7,6 @@ import { ApolloProvider } from 'react-apollo';
 import { setContext } from 'apollo-link-context';
 import { ApolloLink } from 'apollo-link';
 import 'semantic-ui-css/semantic.min.css';
-
 import Routes from './routes';
 import registerServiceWorker from './registerServiceWorker';
 
