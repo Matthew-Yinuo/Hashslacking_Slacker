@@ -6,12 +6,11 @@ import path from 'path';
 import { fileLoader, mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
-
 import models from './models';
 import { refreshTokens } from './auth';
 
-const SECRET = 'asiodfhoi1hoi23jnl1kejd';
-const SECRET2 = 'asiodfhoi1hoi23jnl1kejasdjlkfasdd';
+const SECRET = 'asasdf3jnl1kejd';
+const SECRET2 = 'asiasdfl1kejasdjlkfasdd';
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schema')));
 
