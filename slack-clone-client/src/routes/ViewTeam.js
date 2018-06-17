@@ -34,13 +34,13 @@ const ViewTeam = ({ data: { loading, allTeams }, match: { params: { teamId, chan
         }))}
         team={team}
       />
-      <Header channelName={channel.name} />
-      <Messages channelId={channel.id}>
+      {channel && <Header channelName={channel.name} />}
+      {channel && <Messages channelId={channel.id}>
         <ul className="message-list">
           <li />
           <li />
         </ul>
-      </Messages>
+                  </Messages>}
       <SendMessage channelName={channel.name} />
     </AppLayout>
   );
