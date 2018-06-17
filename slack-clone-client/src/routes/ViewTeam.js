@@ -18,7 +18,7 @@ const ViewTeam = ({
     return null;
   }
 
-  const teams = Object.assign({}, allTeams, invitedTeams);
+  const teams = [...allTeams, ...invitedTeams];
 
   if (!teams.length) {
     return <Redirect to="/create-team" />;
