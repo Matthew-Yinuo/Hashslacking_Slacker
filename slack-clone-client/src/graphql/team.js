@@ -11,7 +11,7 @@ export const allTeamsQuery = gql`
         name
       }
     }
-    inviteTeams {
+    invitedTeams {
       id
       name
       owner

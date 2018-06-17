@@ -28,7 +28,7 @@ export default class Sidebar extends React.Component {
     try {
       const token = localStorage.getItem('token');
       const { user } = decode(token);
-      isOwner == user.id === team.owner;
+      isOwner = user.id === team.owner;
       // eslint-disable-next-line prefer-destructuring
       username = user.username;
     } catch (err) {}
