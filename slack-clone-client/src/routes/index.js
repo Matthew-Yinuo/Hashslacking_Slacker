@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import decode from 'jwt-decode';
+
 import Home from './Home';
 import Register from './Register';
 import Login from './Login';
