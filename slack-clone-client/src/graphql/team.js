@@ -1,8 +1,16 @@
 import gql from 'graphql-tag';
 
-const allTeamsQuery = gql`
+export const allTeamsQuery = gql`
   {
     allTeams {
+      id
+      name
+      channels {
+        id
+        name
+      }
+    }
+    inviteTeams {
       id
       name
       channels {
@@ -13,4 +21,4 @@ const allTeamsQuery = gql`
   }
 `;
 
-export default allTeamsQuery;
+export const idk = {};
