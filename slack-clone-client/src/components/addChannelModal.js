@@ -6,6 +6,7 @@ import { compose, graphql } from 'react-apollo';
 import { allTeamsQuery } from '../graphql/team';
 import findIndex from 'lodash/findIndex';
 
+//Fix the position you handsome devil
 const AddChannelModal = ({
   open,
   onClose,
