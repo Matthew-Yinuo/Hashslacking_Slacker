@@ -5,6 +5,8 @@ import gql from 'graphql-tag';
 import { compose, graphql } from 'react-apollo';
 import normalizeErrors from '../normalizeErrors';
 
+//Modal needs to be centered
+
 const InvitePeopleModal = ({
   open,
   onClose,
