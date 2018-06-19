@@ -19,7 +19,7 @@ const ViewTeam = ({
     return null;
   }
 
-  const teams = [...allTeams, ...invitedTeams];
+  const teams = Object.assign({}, allTeams, invitedTeams);
 
   if (!teams.length) {
     return <Redirect to="/create-team" />;
@@ -40,13 +40,13 @@ const ViewTeam = ({
         }))} team={team} />
       {channel && <Header channelName={channel.name} />}
       {channel && (
-      <MessageContainer channelId={channel.id} </MessageContainer>
-          <Messages channelId={channel.id}>
+      <MessageContainer channelId={channel.id} />
+          (<Messages channelId={channel.id}>
             <ul className="message-list">
               <li />
               <li />
             </ul>
-          </Messages>
+          </Messages>)
         )}
       {channel && <SendMessage channelName={channel.name} channelId={channel.id} />}
     </AppLayout>;
