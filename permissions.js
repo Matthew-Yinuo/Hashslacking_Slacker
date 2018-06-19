@@ -1,6 +1,6 @@
-const createResolver = (resolver) => {
+const createResolver = resolver => {
   const baseResolver = resolver;
-  baseResolver.createResolver = (childResolver) => {
+  baseResolver.createResolver = childResolver => {
     const newResolver = async (parent, args, context, info) => {
       await resolver(parent, args, context, info);
       return childResolver(parent, args, context, info);
@@ -10,9 +10,9 @@ const createResolver = (resolver) => {
   return baseResolver;
 };
 
-  // requiresAuth
+// requiresAuth
 export default createResolver((parent, args, { user }) => {
   if (!user || !user.id) {
-    throw new Error('Not authenticated');
+    throw new Error("Not authenticated");
   }
 });
