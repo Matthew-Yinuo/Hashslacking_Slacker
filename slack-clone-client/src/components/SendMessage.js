@@ -7,32 +7,36 @@ import { compose, graphql } from 'react-apollo';
 
 const SendMessageWrapper = styled.div`
   grid-column: 3;
-  grid-row: 3;
-  margin: 20px;
+  padding: 20px;
+  background-color:grey;
 `;
 
 const ENTER_KEY = 13;
 
-
 const SendMessage = ({
-  onKeyDown={(e) => {
-  if (e.keyCode === ENTER_KEY && !isSubmitting) {
-    handleSubmit(e);
-      }
-    }
-  }
   channelName,
   values,
   handleChange,
   handleBlur,
   handleSubmit,
   isSubmitting,
-  resetForm,
-  }) => (
-  <SendMessageWrapper>
-    <Input name="message" value={values.message} onBlur={handleBlur} onChange={handleChange} fluid placeholder={`Message #${channelName}`} />
-  </SendMessageWrapper>
-);
+}) => (
+    <SendMessageWrapper>
+      <Input
+        onKeyDown={(e) => {
+          if (e.keyCode === ENTER_KEY && !isSubmitting) {
+            handleSubmit(e);
+          }
+        }}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        name="message"
+        value={values.message}
+        fluid
+        placeholder={`Message #${channelName}`}
+      />
+    </SendMessageWrapper>
+  );
 
 const createMessageMutation = gql`
   mutation($channelId: Int!, $text: String!) {

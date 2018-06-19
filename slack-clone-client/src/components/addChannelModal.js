@@ -60,20 +60,23 @@ const createChannelMutation = gql`
 export default compose(
   graphql(createChannelMutation),
   withFormik({
-    mapPropsToValues: () => ({ name: '' }),
-    handleSubmit: async (values, { props: { onClose, teamId, mutate }, setSubmitting }) => {
+    mapPropsToValues: () => ({ name: "" }),
+    handleSubmit: async (
+      values,
+      { props: { onClose, teamId, mutate }, setSubmitting, resetForm }
+    ) => {
       await mutate({
         variables: { teamId, name: values.name },
         optimisticResponse: {
           createChannel: {
-            __typename: 'Mutation',
+            __typename: "Mutation",
             ok: true,
             channel: {
-              __typename: 'Channel',
+              __typename: "Channel",
               id: -1,
-              name: values.name,
-            },
-          },
+              name: values.name
+            }
+          }
         },
         update: (store, { data: { createChannel } }) => {
           const { ok, channel } = createChannel;
@@ -82,13 +85,14 @@ export default compose(
           }
 
           const data = store.readQuery({ query: allTeamsQuery });
-          const teamIdx = findIndex(data.allTeams, ['id', teamId]);
+          const teamIdx = findIndex(data.allTeams, ["id", teamId]);
           data.allTeams[teamIdx].channels.push(channel);
           store.writeQuery({ query: allTeamsQuery, data });
-        },
+        }
       });
       onClose();
       setSubmitting(false);
-    },
-  }),
+      resetForm(false);
+    }
+  })
 )(AddChannelModal);
