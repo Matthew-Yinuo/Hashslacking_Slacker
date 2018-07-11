@@ -8,14 +8,13 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import { createServer } from "http";
 import { execute, subscribe } from "graphql";
-import { PubSub } from "graphql-subscriptions";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 
 import models from "./models";
 import { refreshTokens } from "./auth";
 
-const SECRET = "asiodfhoi1hoi23jnl1kejd";
-const SECRET2 = "asiodfhoi1hoi23jnl1kejasdjlkfasdd";
+const SECRET = "aasdfiodfhoiasdffbjnljkejd";
+const SECRET2 = "aqewrodfasfdasdfkejasdjlkfasdd";
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, "./schema")));
 
