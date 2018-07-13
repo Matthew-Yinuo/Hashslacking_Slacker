@@ -8,7 +8,7 @@ export default `
   }
 
   type Query {
-    directmessages: [DirectMessage!]!
+    directMessages(teamId:Int!,otherUserId:Int!): [DirectMessage!]!
   }
 
   type Mutation {
