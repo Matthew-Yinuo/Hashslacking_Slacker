@@ -9,11 +9,12 @@ const sequelize = new Sequelize('postgres', 'postgres', 'postgres', {
 });
 
 const models = {
-  User: sequelize.import('./user'),
-  Channel: sequelize.import('./channel'),
-  Message: sequelize.import('./message'),
-  Team: sequelize.import('./team'),
-  Member: sequelize.import('./member'),
+  User: sequelize.import("./user"),
+  Channel: sequelize.import("./channel"),
+  Message: sequelize.import("./message"),
+  DirectMessage: sequelize.import("./directmessage"),
+  Team: sequelize.import("./team"),
+  Member: sequelize.import("./member")
 };
 
 Object.keys(models).forEach((modelName) => {

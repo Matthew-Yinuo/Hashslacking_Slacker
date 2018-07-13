@@ -1,5 +1,4 @@
 import React from 'react';
-import decode from 'jwt-decode';
 import Channels from '../components/Channels';
 import Teams from '../components/Teams';
 import AddChannelModal from '../components/addChannelModal';
@@ -21,18 +20,9 @@ export default class Sidebar extends React.Component {
   }
 
   render() {
-    const { teams, team } = this.props;
+    const { teams, team, username} = this.props;
     const { openInvitePeopleModal, openAddChannelModal } = this.state;
-    let isOwner = false;
-    let username = '';
-    try {
-      const token = localStorage.getItem('token');
-      const { user } = decode(token);
-      isOwner = user.id === team.owner;
-      // eslint-disable-next-line prefer-destructuring
-      username = user.username;
-    } catch (err) {}
-
+    
     return [
       <Teams key="team-sidebar" teams={teams} />,
       <Channels
@@ -44,7 +34,7 @@ export default class Sidebar extends React.Component {
         users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
         onAddChannelClick={this.handleToggleChannelModal}
         onInvitePeopleClick={this.handleToggleInvitePeopleModal}
-        isOwner={isOwner}
+        isOwner={team.admin}
       />,
       <AddChannelModal
         teamId={team.id}
