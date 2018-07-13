@@ -19,9 +19,8 @@ const ViewTeam = ({
   if (loading) {
     return null;
   }
-  console.log(otherProps);
-  console.log(me);
-  const { teams } = me;
+
+  const { teams,username } = me;
 
   if (!teams.length) {
     return <Redirect to="/create-team" />;
@@ -46,6 +45,7 @@ const ViewTeam = ({
           letter: t.name.charAt(0).toUpperCase()
         }))}
         team={team}
+        username={username}
       />
       {channel && <Header channelName={channel.name} />}
       {channel && <MessageContainer channelId={channel.id} />}
