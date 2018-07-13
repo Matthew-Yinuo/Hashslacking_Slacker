@@ -6,26 +6,20 @@ const pubsub = new PubSub();
 
 const NEW_CHANNEL_MESSAGE = "NEW_CHANNEL_MESSAGE";
 
-// const member = await models.Member.findOne({ where: { teamId: 1, userId: user.id } });
-
-            // if (!member) {
-            //   throw new Error('Missing auth tokens!');
-            // }
-
 export default {
   Subscription: {
     newChannelMessage: {
       subscribe: withFilter(
-        requiresAuth.createResolver(async (parent,{channelId},{models,user}) =>{
-        const channel = await models.Channel.findOne({where:{id:channelId}});
-        const member = await models.Member.findOne({
-          where:{teamId:channel.teamId, userId:user.id}
-        });
-        if(!member){
-          throw new Error("You need to a member to view these messages");
-        }
-        return pubsub.asyncIterator(NEW_CHANNEL_MESSAGE);
-        }),
+        (parent, { channelId }, { models, user }) =>
+          // check if part of the team
+          // const channel = await models.Channel.findOne({ where: { id: channelId } });
+          // const member = await models.Member.findOne({
+          //   where: { teamId: channel.teamId, userId: user.id },
+          // });
+          // if (!member) {
+          //   throw new Error("You have to be a member of the team to subcribe to it's messages");
+          // }
+          pubsub.asyncIterator(NEW_CHANNEL_MESSAGE),
         (payload, args) => payload.channelId === args.channelId
       )
     }
