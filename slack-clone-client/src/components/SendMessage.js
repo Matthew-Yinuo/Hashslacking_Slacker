@@ -48,5 +48,4 @@ export default withFormik({
       await onSubmit(values.message);
       resetForm(false);
     },
-  })
-(SendMessage);
+  })(SendMessage);
