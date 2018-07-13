@@ -1,5 +1,5 @@
 import React from "react";
-import { graphql } from "react-apollo";
+import { compose, graphql } from "react-apollo";
 import findIndex from "lodash/findIndex";
 import { Redirect } from "react-router-dom";
 import Header from "../components/Header";
@@ -8,11 +8,12 @@ import AppLayout from "../components/AppLayout";
 import Sidebar from "../containers/Sidebar";
 import MessageContainer from "../containers/MessageContainer";
 import { meQuery } from "../graphql/team";
+import gql from 'graphql-tag';
 
 const ViewTeam = ({
     data: { loading, me, ...otherProps },
     match: {
-        params: { teamId, channelId }
+        params: { teamId, userId }
     }
 }) => {
     if (loading) {
@@ -29,13 +30,6 @@ const ViewTeam = ({
     const teamIdx = teamIdInteger ? findIndex(teams, ["id", teamIdInteger]) : 0;
     const team = teamIdx === -1 ? teams[0] : teams[teamIdx];
 
-    const channelIdInteger = parseInt(channelId, 10);
-    const channelIdx = channelIdInteger
-        ? findIndex(team.channels, ["id", channelIdInteger])
-        : 0;
-    const channel =
-        channelIdx === -1 ? team.channels[0] : team.channels[channelIdx];
-
     return (
         <AppLayout>
             <Sidebar
@@ -46,15 +40,18 @@ const ViewTeam = ({
                 team={team}
                 username={username}
             />
-            {channel && <Header channelName={channel.name} />}
-            {channel && <MessageContainer channelId={channel.id} />}
-            {channel && (
-                <SendMessage channelName={channel.name} channelId={channel.id} />
-            )}
+            <SendMessage onSubmit={() => {}} placeholder ={userId}/>
         </AppLayout>
     );
 };
 
-export default graphql(meQuery, { options: { fetchPolicy: "network-only" } })(
-    ViewTeam
-);
+const createDirectMessageMutation = gql`
+  mutation($channelId: Int!, $text: String!) {
+    createMessage(channelId: $channelId, text: $text)
+  }
+`;
+
+export default compose(
+    graphql(meQuery, { options: { fetchPolicy: "network-only" } }),
+    graphql(createDirectMessageMutation),
+)(ViewTeam);
