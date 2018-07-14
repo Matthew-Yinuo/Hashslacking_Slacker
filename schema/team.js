@@ -25,3 +25,5 @@ export default `
     addTeamMember(email: String!, teamId: Int!): VoidResponse!
   }
 `;
+
+//Get tea members

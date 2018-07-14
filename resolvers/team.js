@@ -1,6 +1,8 @@
 import formatErrors from "../formatErrors";
 import requiresAuth from "../permissions";
 
+
+//Create team member query
 export default {
   Query: {
     getTeamMembers: requiresAuth.createResolver(async (parent, { teamId }, { models }) =>
