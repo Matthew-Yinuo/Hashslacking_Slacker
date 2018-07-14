@@ -35,8 +35,8 @@ class DMMessageContainer extends React.Component {
 }
 
 const directMessagesQuery = gql`
-  query($teamId: Int!,$otherUserId: Int!) {
-    directMessages(teamId:$teamId, otherUserId:$otherUserId) {
+  query($teamId: Int!, $userId: Int!) {
+    directMessages(teamId: $teamId, otherUserId: $userId) {
       id
       sender {
         username
