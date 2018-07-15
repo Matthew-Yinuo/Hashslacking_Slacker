@@ -15,4 +15,9 @@ export default `
     createDirectMessage(receiverId: Int!,text: String!): Boolean!
   }
 
+   type Subscription { 
+    newChannelMessage(channelId: Int!): Message! 
+  } 
+ 
+
 `;

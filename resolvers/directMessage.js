@@ -1,6 +1,20 @@
 import requiresAuth from '../permissions';
+import { PubSub, withFilter } from "graphql-subscriptions"; 
+
+const pubsub = new PubSub();
+
+const NEW_CHANNEL_MESSAGE = "NEW_CHANNEL_MESSAGE"; 
+
 
 export default {
+    Subscription: {
+        newChannelMessage: {
+            subscribe: withFilter(
+                () => pubsub.asyncIterator(NEW_CHANNEL_MESSAGE),
+                (payload, args) => payload.channelId === args.channelId
+            )
+        }
+    }, 
     DirectMessage: {
         sender: ({ sender, senderId }, args, { models }) => {
             if (sender) {
@@ -38,21 +52,21 @@ export default {
                     senderId: user.id,
                 });
 
-                // const asyncFunc = async () => {
-                //   const currentUser = await models.User.findOne({
-                //     where: {
-                //       id: user.id,
-                //     },
-                //   });
+                const asyncFunc = async () => {
+                 const currentUser = await models.User.findOne({
+                    where: {
+                       id: user.id,
+                     },
+                   });
 
-                //   pubsub.publish(NEW_CHANNEL_MESSAGE, {
-                //     channelId: args.channelId,
-                //     newChannelMessage: {
-                //       ...message.dataValues,
-                //       user: currentUser.dataValues,
-                //     },
-                //   });
-                // };
+                 pubsub.publish(NEW_CHANNEL_MESSAGE, {
+                    channelId: args.channelId,
+                    newChannelMessage: {
+                      ...message.dataValues,
+                      user: currentUser.dataValues,
+                     },
+                   });
+                 };
 
                 // asyncFunc();
 
