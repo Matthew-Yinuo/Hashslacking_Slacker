@@ -36,16 +36,30 @@ const ViewTeam = ({ mutate, data: { loading, me }, match: { params: { teamId, us
             username={username}
             />
         <Header channelName={"Name Here"} />
-        <DMContainer teamId={teamId}  userId={userId}/>
+        <DMContainer teamId={team.id}  userId={userId}/>
         <SendMessage
             onSubmit={async (text) => {
             await mutate({
             variables: {
                 text,
                 receiverId: userId,
+                teamId,
             },
-            });
-            }}
+            optimisticResponse: true,
+            update: (store) => {
+              const data = store.readQuery({ query: meQuery });
+              const teamIdx2 = findIndex(data.me.teams, ['id', team.id]);
+              const notAlreadyThere = data.me.teams[teamIdx2].directMessageMembers.every(member => member.id!== parseInt(userId,10));
+              if (notAlreadyThere) {
+                data.me.teams[teamIdx2].directMessageMembers.push({
+                  __typename: "User",
+                  id: userId,
+                  username: '',
+                });
+                store.writeQuery({ query: meQuery, data });
+              }},
+          });
+          }}
             placeholder={userId}
             />
       </AppLayout>
