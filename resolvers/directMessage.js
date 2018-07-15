@@ -1,80 +1,75 @@
 import requiresAuth from '../permissions';
-import { PubSub, withFilter } from "graphql-subscriptions"; 
+import pubsub from '../pubsub';
+import { withFilter } from 'graphql-subscriptions';
 
-const pubsub = new PubSub();
-
-const NEW_CHANNEL_MESSAGE = "NEW_CHANNEL_MESSAGE"; 
+const NEW_CHANNEL_MESSAGE = 'NEW_CHANNEL_MESSAGE';
 
 
 export default {
-    Subscription: {
-        newChannelMessage: {
-            subscribe: withFilter(
-                () => pubsub.asyncIterator(NEW_CHANNEL_MESSAGE),
-                (payload, args) => payload.channelId === args.channelId
-            )
-        }
-    }, 
-    DirectMessage: {
-        sender: ({ sender, senderId }, args, { models }) => {
-            if (sender) {
-                return sender;
-            }
+  Subscription: {
+    newDirectMessage: {
+      subscribe: directMessageSubscription.createResolver(withFilter(
+        () => pubsub.asyncIterator(NEW_DIRECT_MESSAGE),
+        (payload, args, { user }) =>
+          payload.teamId === args.teamId &&
+                    ((payload.senderId === user.id && payload.receiverId === args.userId) ||
+                        (payload.senderId === args.userId && payload.receiverId === user.id)),
+      )),
+    },
+  },
+  DirectMessage: {
+    sender: ({ sender, senderId }, args, { models }) => {
+      if (sender) {
+        return sender;
+      }
 
-            return models.User.findOne({ where: { id: senderId } }, { raw: true });
+      return models.User.findOne({ where: { id: senderId } }, { raw: true });
+    },
+  },
+  Query: {
+    directMessages: requiresAuth.createResolver(async (parent, { teamId, otherUserId }, { models, user }) =>
+      models.DirectMessage.findAll(
+        {
+          order: [['created_at', 'ASC']],
+          where: {
+            teamId,
+            [models.sequelize.Op.or]: [
+              {
+                [models.sequelize.Op.and]: [{ receiverId: otherUserId }, { senderId: user.id }],
+              },
+              {
+                [models.sequelize.Op.and]: [{ receiverId: user.id }, { senderId: otherUserId }],
+              },
+            ],
+          },
         },
-    },
-    Query: {
-        directMessages: requiresAuth.createResolver(async (parent, { teamId, otherUserId }, { models, user }) =>
-            models.DirectMessage.findAll(
-                {
-                    order: [['created_at', 'ASC']],
-                    where: {
-                        teamId,
-                        [models.sequelize.Op.or]: [
-                            {
-                                [models.sequelize.Op.and]: [{ receiverId: otherUserId }, { senderId: user.id }],
-                            },
-                            {
-                                [models.sequelize.Op.and]: [{ receiverId: user.id }, { senderId: otherUserId }],
-                            },
-                        ],
-                    },
-                },
-                { raw: true },
-            )),
-    },
-    Mutation: {
-        createDirectMessage: requiresAuth.createResolver(async (parent, args, { models, user }) => {
-            try {
-                const directMessage = await models.DirectMessage.create({
-                    ...args,
-                    senderId: user.id,
-                });
+        { raw: true },
+      )),
+  },
+  Mutation: {
+    createDirectMessage: requiresAuth.createResolver(async (parent, args, { models, user }) => {
+      try {
+        const directMessage = await models.DirectMessage.create({
+          ...args,
+          senderId: user.id,
+        });
+        pubsub.publish(NEW_DIRECT_MESSAGE, {
+          teamId: args.teamId,
+          senderId: user.id,
+          receiverId: args.receiverId,
+          newDirectMessage: {
+            ...directMessage.dataValues,
+            sender: {
+              username: user.username,
+            },
+          },
+        });
 
-                const asyncFunc = async () => {
-                 const currentUser = await models.User.findOne({
-                    where: {
-                       id: user.id,
-                     },
-                   });
-
-                 pubsub.publish(NEW_CHANNEL_MESSAGE, {
-                    channelId: args.channelId,
-                    newChannelMessage: {
-                      ...message.dataValues,
-                      user: currentUser.dataValues,
-                     },
-                   });
-                 };
-
-                // asyncFunc();
-
-                return true;
-            } catch (err) {
-                console.log(err);
-                return false;
-            }
-        }),
-    },
+        return true;
+      } catch (err) {
+        console.log(err);
+        return false;
+      }
+    }),
+  },
 };

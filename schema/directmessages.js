@@ -16,7 +16,7 @@ export default `
   }
 
    type Subscription { 
-    newChannelMessage(channelId: Int!): Message! 
+    newDirectMessage(teamId: Int!, userId: Int!): DirectMessage! 
   } 
  
 
