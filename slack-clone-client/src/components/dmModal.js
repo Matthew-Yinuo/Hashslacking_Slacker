@@ -9,10 +9,15 @@ const dmModal = ({
     history,
     open,
     onClose,
+    resetForm,
     teamId,
     data: { loading, getTeamMembers },
 }) => (
-        <Modal open={open} onClose={onClose}>
+        <Modal open={open} onClose={() => {
+            resetForm();
+            onClose();
+        }
+        }>
             <Modal.Header>Add Member</Modal.Header>
             <Modal.Content>
                 <Form>
