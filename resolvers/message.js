@@ -33,39 +33,42 @@ export default {
         )
     )
   },
-  Mutation: {
-    createMessage: requiresAuth.createResolver(
-      async (parent, args, { models, user }) => {
-        try {
-          const message = await models.Message.create({
-            ...args,
-            userId: user.id
+   Mutation: {
+    createMessage: requiresAuth.createResolver(async (parent, { file, ...args }, { models, user }) => {
+      try {
+        const messageData = args;
+        if (file) {
+          messageData.filetype = file.type;
+          messageData.url = file.path;
+        }
+        const message = await models.Message.create({
+          ...messageData,
+          userId: user.id,
+        });
+
+        const asyncFunc = async () => {
+          const currentUser = await models.User.findOne({
+            where: {
+              id: user.id,
+            },
           });
 
-          const asyncFunc = async () => {
-            const currentUser = await models.User.findOne({
-              where: {
-                id: user.id
-              }
-            });
+          pubsub.publish(NEW_CHANNEL_MESSAGE, {
+            channelId: args.channelId,
+            newChannelMessage: {
+              ...message.dataValues,
+              user: currentUser.dataValues,
+            },
+          });
+        };
 
-            pubsub.publish(NEW_CHANNEL_MESSAGE, {
-              channelId: args.channelId,
-              newChannelMessage: {
-                ...message.dataValues,
-                user: currentUser.dataValues
-              }
-            });
-          };
+        asyncFunc();
 
-          asyncFunc();
-
-          return true;
-        } catch (err) {
-          console.log(err);
-          return false;
-        }
+        return true;
+      } catch (err) {
+        console.log(err);
+        return false;
       }
-    )
-  }
+    }),
+  },
 };
