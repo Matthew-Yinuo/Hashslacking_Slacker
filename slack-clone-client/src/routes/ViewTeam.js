@@ -2,7 +2,8 @@ import React from "react";
 import { compose, graphql } from "react-apollo";
 import findIndex from "lodash/findIndex";
 import { Redirect } from "react-router-dom";
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
+
 import Header from "../components/Header";
 import SendMessage from "../components/SendMessage";
 import AppLayout from "../components/AppLayout";
@@ -12,7 +13,7 @@ import { meQuery } from "../graphql/team";
 
 const ViewTeam = ({
   mutate,
-  data: { loading, me, ...otherProps },
+  data: { loading, me },
   match: {
     params: { teamId, channelId }
   }
@@ -21,7 +22,7 @@ const ViewTeam = ({
     return null;
   }
 
-  const { teams,username } = me;
+  const { username, teams } = me;
 
   if (!teams.length) {
     return <Redirect to="/create-team" />;
@@ -51,9 +52,13 @@ const ViewTeam = ({
       {channel && <Header channelName={channel.name} />}
       {channel && <MessageContainer channelId={channel.id} />}
       {channel && (
-        <SendMessage placeholder={channel.name} onSubmit={async (text) =>
-        { await mutate({variables:{text,channelId:channel.id}})}
-        }channelId={channel.id} />
+        <SendMessage
+          channelId={channel.id}
+          placeholder={channel.name}
+          onSubmit={async text => {
+            await mutate({ variables: { text, channelId: channel.id } });
+          }}
+        />
       )}
     </AppLayout>
   );
@@ -66,6 +71,6 @@ const createMessageMutation = gql`
 `;
 
 export default compose(
-   graphql(meQuery, { options: { fetchPolicy: "network-only" } }),
-   graphql(createMessageMutation),
+  graphql(meQuery, { options: { fetchPolicy: "network-only" } }),
+  graphql(createMessageMutation)
 )(ViewTeam);
