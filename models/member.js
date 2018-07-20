@@ -1,9 +1,9 @@
 export default (sequelize, DataTypes) => {
-  const Member = sequelize.define("member", {
+  const Member = sequelize.define('member', {
     admin: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false
-    }
+      defaultValue: false,
+    },
   });
 
   return Member;

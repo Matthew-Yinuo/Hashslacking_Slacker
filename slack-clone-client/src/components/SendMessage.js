@@ -23,26 +23,26 @@ const SendMessage = ({
   isSubmitting,
   channelId,
 }) => (
-    <SendMessageWrapper>
-      <FileUpload channelId={channelId}>
-        <Button icon>
-          <Icon name="plus" />
-        </Button>
-      </FileUpload>
-      <Input
-        onKeyDown={(e) => {
-          if (e.keyCode === ENTER_KEY && !isSubmitting) {
-            handleSubmit(e);
-          }
-        }}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        name="message"
-        value={values.message}
-        placeholder={`Message #${placeholder}`}
-      />
-    </SendMessageWrapper>
-  );
+  <SendMessageWrapper>
+    <FileUpload channelId={channelId}>
+      <Button icon>
+        <Icon name="plus" />
+      </Button>
+    </FileUpload>
+    <Input
+      onKeyDown={(e) => {
+        if (e.keyCode === ENTER_KEY && !isSubmitting) {
+          handleSubmit(e);
+        }
+      }}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      name="message"
+      value={values.message}
+      placeholder={`Message #${placeholder}`}
+    />
+  </SendMessageWrapper>
+);
 
 export default withFormik({
   mapPropsToValues: () => ({ message: '' }),

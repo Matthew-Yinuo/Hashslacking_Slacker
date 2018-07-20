@@ -1,39 +1,50 @@
-import {withFilter } from "graphql-subscriptions";
-import requiresAuth, { requiresTeamAccess} from "../permissions";
-import pubsub from "../pubsub";
+import { withFilter } from 'graphql-subscriptions';
 
+import requiresAuth, { requiresTeamAccess } from '../permissions';
+import pubsub from '../pubsub';
 
-const NEW_CHANNEL_MESSAGE = "NEW_CHANNEL_MESSAGE";
+const NEW_CHANNEL_MESSAGE = 'NEW_CHANNEL_MESSAGE';
 
 export default {
   Subscription: {
     newChannelMessage: {
       subscribe: requiresTeamAccess.createResolver(withFilter(
-        () =>
-          pubsub.asyncIterator(NEW_CHANNEL_MESSAGE),
-        (payload, args) => payload.channelId === args.channelId
-      ))
-    }
+        () => pubsub.asyncIterator(NEW_CHANNEL_MESSAGE),
+        (payload, args) => payload.channelId === args.channelId,
+      )),
+    },
   },
   Message: {
+    url: parent => (parent.url ? `http://localhost:8081/${parent.url}` : parent.url),
     user: ({ user, userId }, args, { models }) => {
       if (user) {
         return user;
       }
 
       return models.User.findOne({ where: { id: userId } }, { raw: true });
-    }
+    },
   },
   Query: {
-    messages: requiresAuth.createResolver(
-      async (parent, { channelId }, { models }) =>
-        models.Message.findAll(
-          { order: [["created_at", "ASC"]], where: { channelId } },
-          { raw: true }
-        )
-    )
+    messages: requiresAuth.createResolver(async (parent, { channelId }, { models, user }) => {
+      const channel = await models.Channel.findOne({ raw: true, where: { id: channelId } });
+
+      if (!channel.public) {
+        const member = await models.PCMember.findOne({
+          raw: true,
+          where: { channelId, userId: user.id },
+        });
+        if (!member) {
+          throw new Error('Not Authorized');
+        }
+      }
+
+      return models.Message.findAll(
+        { order: [['created_at', 'ASC']], where: { channelId } },
+        { raw: true },
+      );
+    }),
   },
-   Mutation: {
+  Mutation: {
     createMessage: requiresAuth.createResolver(async (parent, { file, ...args }, { models, user }) => {
       try {
         const messageData = args;

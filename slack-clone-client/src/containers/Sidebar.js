@@ -1,33 +1,56 @@
 import React from 'react';
+
 import Channels from '../components/Channels';
 import Teams from '../components/Teams';
-import AddChannelModal from '../components/addChannelModal';
-import InvitePeopleModal from '../components/invitePeopleModal';
-import DMModal from "../components/dmModal";
-
+import AddChannelModal from '../components/AddChannelModal';
+import InvitePeopleModal from '../components/InvitePeopleModal';
+import DirectMessageModal from '../components/DirectMessageModal';
 
 export default class Sidebar extends React.Component {
   state = {
     openAddChannelModal: false,
     openInvitePeopleModal: false,
-    openDMModal: false,
+    openDirectMessageModal: false,
   };
 
-   handleToggleChannelModal = () => {
-     this.setState({openAddChannelModal: !this.state.openAddChannelModal})
-   }
+  toggleDirectMessageModal = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    this.setState(state => ({ openDirectMessageModal: !state.openDirectMessageModal }));
+  };
 
-  handleToggleInvitePeopleModal= () => {
-    this.setState({openInvitePeopleModal: !this.state.openInvitePeopleModal})
-  }
-  handleToggleDMModal = () => {
-    this.setState({ openDMModal: !this.state.openDMModal });
-  }
+  toggleAddChannelModal = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    this.setState(state => ({ openAddChannelModal: !state.openAddChannelModal }));
+  };
+
+  toggleInvitePeopleModal = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    this.setState(state => ({ openInvitePeopleModal: !state.openInvitePeopleModal }));
+  };
 
   render() {
-    const { teams, team, username} = this.props;
-    const { openInvitePeopleModal, openAddChannelModal ,openDMModal} = this.state;
-    
+    const {
+      teams, team, username, currentUserId,
+    } = this.props;
+    const { openInvitePeopleModal, openAddChannelModal, openDirectMessageModal } = this.state;
+
+    const regularChannels = [];
+    const dmChannels = [];
+
+    team.channels.forEach((c) => {
+      if (c.dm) {
+        dmChannels.push(c);
+      } else {
+        regularChannels.push(c);
+      }
+    });
+
     return [
       <Teams key="team-sidebar" teams={teams} />,
       <Channels
@@ -35,28 +58,30 @@ export default class Sidebar extends React.Component {
         teamName={team.name}
         username={username}
         teamId={team.id}
-        channels={team.channels}
-        users={team.directMessageMembers}
-        onAddChannelClick={this.handleToggleChannelModal}
-        onInvitePeopleClick={this.handleToggleInvitePeopleModal}
-        onDMClick={this.handleToggleDMModal}
+        channels={regularChannels}
+        dmChannels={dmChannels}
+        onAddChannelClick={this.toggleAddChannelModal}
+        onInvitePeopleClick={this.toggleInvitePeopleModal}
+        onDirectMessageClick={this.toggleDirectMessageModal}
         isOwner={team.admin}
       />,
-      <DMModal
+      <DirectMessageModal
         teamId={team.id}
-        onClose={this.handleToggleDMModal}
-        open={openDMModal}
-        key="sidebar-dm-modal"
+        onClose={this.toggleDirectMessageModal}
+        open={openDirectMessageModal}
+        key="sidebar-direct-message-modal"
+        currentUserId={currentUserId}
       />,
       <AddChannelModal
         teamId={team.id}
-        onClose={this.handleToggleChannelModal}
+        onClose={this.toggleAddChannelModal}
         open={openAddChannelModal}
         key="sidebar-add-channel-modal"
+        currentUserId={currentUserId}
       />,
       <InvitePeopleModal
         teamId={team.id}
-        onClose={this.handleToggleInvitePeopleModal}
+        onClose={this.toggleInvitePeopleModal}
         open={openInvitePeopleModal}
         key="invite-people-modal"
       />,
