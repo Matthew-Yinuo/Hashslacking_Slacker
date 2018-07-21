@@ -13,7 +13,10 @@ const isAuthenticated = () => {
   const refreshToken = localStorage.getItem('refreshToken');
   try {
     decode(token);
-    decode(refreshToken);
+    const { exp } = decode(refreshToken);
+    if (Date.now() / 1000 > exp) {
+      return false;
+    }
   } catch (err) {
     return false;
   }
@@ -28,12 +31,13 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
       (isAuthenticated() ? (
         <Component {...props} />
       ) : (
-        <Redirect
-          to={{
-            pathname: '/login',
-          }}
-        />
-      ))}
+          <Redirect
+            to={{
+              pathname: '/login',
+            }}
+          />
+        ))
+    }
   />
 );
 
