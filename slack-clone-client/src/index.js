@@ -1,11 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { ApolloProvider } from "react-apollo";
-import "semantic-ui-css/semantic.min.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { ApolloProvider } from 'react-apollo';
+import 'semantic-ui-css/semantic.min.css';
 
-import Routes from "./routes";
-import registerServiceWorker from "./registerServiceWorker";
-import client from "./apollo";
+import Routes from './routes';
+import registerServiceWorker from './registerServiceWorker';
+import client from './apollo';
 
 const App = (
   <ApolloProvider client={client}>
@@ -13,5 +13,5 @@ const App = (
   </ApolloProvider>
 );
 
-ReactDOM.render(App, document.getElementById("root"));
+ReactDOM.render(App, document.getElementById('root'));
 registerServiceWorker();

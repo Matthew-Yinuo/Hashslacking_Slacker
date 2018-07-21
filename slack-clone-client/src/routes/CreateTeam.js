@@ -1,9 +1,9 @@
 import React from 'react';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 import { extendObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Message, Form, Button, Input, Container, Header } from 'semantic-ui-react';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 class CreateTeam extends React.Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class CreateTeam extends React.Component {
 
     console.log(response);
 
-    const { ok, errors,team } = response.data.createTeam;
+    const { ok, errors, team } = response.data.createTeam;
 
     if (ok) {
       this.props.history.push(`/view-team/${team.id}`);
@@ -79,12 +79,12 @@ const createTeamMutation = gql`
   mutation($name: String!) {
     createTeam(name: $name) {
       ok
+      team {
+        id
+      }
       errors {
         path
         message
-      }
-      team{
-        id
       }
     }
   }

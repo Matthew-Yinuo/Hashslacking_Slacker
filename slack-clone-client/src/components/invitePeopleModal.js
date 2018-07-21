@@ -3,9 +3,8 @@ import { Form, Input, Button, Modal } from 'semantic-ui-react';
 import { withFormik } from 'formik';
 import gql from 'graphql-tag';
 import { compose, graphql } from 'react-apollo';
-import normalizeErrors from '../normalizeErrors';
 
-//Modal needs to be centered
+import normalizeErrors from '../normalizeErrors';
 
 const InvitePeopleModal = ({
   open,
@@ -17,13 +16,8 @@ const InvitePeopleModal = ({
   isSubmitting,
   touched,
   errors,
-  resetForm,
 }) => (
-    <Modal open={open} onClose={(e) => {
-      onClose(e);
-      resetForm();
-    }
-    }>
+  <Modal open={open} onClose={onClose}>
     <Modal.Header>Add People to your Team</Modal.Header>
     <Modal.Content>
       <Form>
@@ -39,14 +33,10 @@ const InvitePeopleModal = ({
         </Form.Field>
         {touched.email && errors.email ? errors.email[0] : null}
         <Form.Group widths="equal">
-            <Button disabled={isSubmitting} fluid onClick={onClose}>
+          <Button disabled={isSubmitting} fluid onClick={onClose}>
             Cancel
           </Button>
-            <Button disabled={isSubmitting}  fluid onClick={(e) => {
-              handleSubmit(e);
-              resetForm();
-            }
-            }>
+          <Button disabled={isSubmitting} onClick={handleSubmit} fluid>
             Add User
           </Button>
         </Form.Group>
@@ -92,7 +82,7 @@ export default compose(
             message: 'this user is already part of the team',
           });
         }
-        setErrors(normalizeErrors(errors));
+        setErrors(normalizeErrors(filteredErrors));
       }
     },
   }),

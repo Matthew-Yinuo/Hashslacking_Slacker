@@ -1,8 +1,9 @@
-import requiresAuth, { directMessageSubscription } from "../permissions";
-import pubsub from '../pubsub';
 import { withFilter } from 'graphql-subscriptions';
 
-const NEW_DIRECT_MESSAGE = "NEW_DIRECT_MESSAGE";
+import requiresAuth, { directMessageSubscription } from '../permissions';
+import pubsub from '../pubsub';
+
+const NEW_DIRECT_MESSAGE = 'NEW_DIRECT_MESSAGE ';
 
 export default {
   Subscription: {
@@ -15,7 +16,7 @@ export default {
               (payload.senderId === args.userId && payload.receiverId === user.id)),
       )),
     },
-},
+  },
   DirectMessage: {
     sender: ({ sender, senderId }, args, { models }) => {
       if (sender) {
@@ -52,6 +53,7 @@ export default {
           ...args,
           senderId: user.id,
         });
+
         pubsub.publish(NEW_DIRECT_MESSAGE, {
           teamId: args.teamId,
           senderId: user.id,

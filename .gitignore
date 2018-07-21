@@ -1,1 +1,4 @@
 node_modules
+dump.sql
+files
+\.eslintrc\.js
