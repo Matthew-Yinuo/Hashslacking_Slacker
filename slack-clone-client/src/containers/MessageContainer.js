@@ -1,7 +1,7 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Comment } from 'semantic-ui-react';
+import { Button, Comment } from 'semantic-ui-react';
 
 import FileUpload from '../components/FileUpload';
 import RenderText from '../components/RenderText';
@@ -41,6 +41,10 @@ const Message = ({ message: { url, text, filetype } }) => {
 };
 
 class MessageContainer extends React.Component {
+  state = {
+    hasMoreItems: true
+  };
+
   componentWillMount() {
     this.unsubscribe = this.subscribe(this.props.channelId);
   }
@@ -64,7 +68,7 @@ class MessageContainer extends React.Component {
     this.props.data.subscribeToMore({
       document: newChannelMessageSubscription,
       variables: {
-        channelId,
+        channelId
       },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData) {
@@ -73,42 +77,80 @@ class MessageContainer extends React.Component {
 
         return {
           ...prev,
-          messages: [...prev.messages, subscriptionData.newChannelMessage],
+          messages: [subscriptionData.newChannelMessage, ...prev.messages]
         };
-      },
+      }
     });
 
   render() {
-    const { data: { loading, messages }, channelId } = this.props;
+    const {
+      data: { loading, messages, fetchMore },
+      channelId
+    } = this.props;
     return loading ? null : (
       <FileUpload
         style={{
           gridColumn: 3,
           gridRow: 2,
-          paddingLeft: '20px',
-          paddingRight: '20px',
-          display: 'flex',
-          flexDirection: 'column-reverse',
-          overflowY: 'auto',
+          paddingLeft: "20px",
+          paddingRight: "20px",
+          display: "flex",
+          flexDirection: "column-reverse",
+          overflowY: "auto"
         }}
         channelId={channelId}
         disableClick
       >
         <Comment.Group>
-          {messages.map(m => (
-            <Comment key={`${m.id}-message`}>
-              <Comment.Content>
-                <Comment.Author as="a">{m.user.username}</Comment.Author>
-                <Comment.Metadata>
-                  <div>{m.created_at}</div>
-                </Comment.Metadata>
-                <Message message={m} />
-                <Comment.Actions>
-                  <Comment.Action>Reply</Comment.Action>
-                </Comment.Actions>
-              </Comment.Content>
-            </Comment>
-          ))}
+          {this.state.hasMoreItems &&
+            messages.length >= 35 && (
+              <Button
+                onClick={() => {
+                  fetchMore({
+                    variables: {
+                      channelId,
+                      cursor: messages[messages.length - 1].created_at
+                    },
+                    updateQuery: (previousResult, { fetchMoreResult }) => {
+                      if (!fetchMoreResult) {
+                        return previousResult;
+                      }
+
+                      if (fetchMoreResult.messages.length < 35) {
+                        this.setState({ hasMoreItems: false });
+                      }
+
+                      return {
+                        ...previousResult,
+                        messages: [
+                          ...previousResult.messages,
+                          ...fetchMoreResult.messages
+                        ]
+                      };
+                    }
+                  });
+                }}
+              >
+                Load more
+              </Button>
+            )}
+          {messages
+            .slice()
+            .reverse()
+            .map(m => (
+              <Comment key={`${m.id}-message`}>
+                <Comment.Content>
+                  <Comment.Author as="a">{m.user.username}</Comment.Author>
+                  <Comment.Metadata>
+                    <div>{m.created_at}</div>
+                  </Comment.Metadata>
+                  <Message message={m} />
+                  <Comment.Actions>
+                    <Comment.Action>Reply</Comment.Action>
+                  </Comment.Actions>
+                </Comment.Content>
+              </Comment>
+            ))}
         </Comment.Group>
       </FileUpload>
     );
@@ -116,8 +158,8 @@ class MessageContainer extends React.Component {
 }
 
 const messagesQuery = gql`
-  query($channelId: Int!) {
-    messages(channelId: $channelId) {
+  query($cursor: String, $offset: Int!, $channelId: Int!) {
+    messages(cursor: $cursor, offset: $offset, channelId: $channelId) {
       id
       text
       user {
@@ -131,10 +173,11 @@ const messagesQuery = gql`
 `;
 
 export default graphql(messagesQuery, {
-  variables: props => ({
-    channelId: props.channelId,
-  }),
-  options: {
-    fetchPolicy: 'network-only',
-  },
+  options: props => ({
+    fetchPolicy: "network-only",
+    variables: {
+      channelId: props.channelId,
+      offset: 0
+    }
+  })
 })(MessageContainer);

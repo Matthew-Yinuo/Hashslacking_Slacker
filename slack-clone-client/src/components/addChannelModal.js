@@ -87,6 +87,7 @@ const createChannelMutation = gql`
       channel {
         id
         name
+        dm
       }
     }
   }
