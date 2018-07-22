@@ -1,4 +1,5 @@
 node_modules
 dump.sql
 files
+dist
 \.eslintrc\.js
