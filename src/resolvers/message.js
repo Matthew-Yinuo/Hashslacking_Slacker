@@ -19,13 +19,13 @@ export default {
   Message: {
     url: (parent,args,{serverUrl}) =>
       parent.url ? `${serverUrl}/${parent.url}` : parent.url,
-    user: ({ user, userId }, args, { models }) => {
+    user: ({ user, userId }, args, { userLoader }) => {
       if (user) {
         return user;
       }
 
-      return models.User.findOne({ where: { id: userId } }, { raw: true });
-    }
+      return userLoader.load(userId)
+;    }
   },
   Query: {
     messages: requiresAuth.createResolver(
