@@ -107,7 +107,7 @@ class MessageContainer extends React.Component {
     } = this.props;
     if (
       this.scroller &&
-      this.scroller.scrollTop < 100 &&
+      this.scroller.scrollTop < 40 &&
       this.state.hasMoreItems &&
       messages.length >= 35
     ) {
@@ -147,7 +147,7 @@ class MessageContainer extends React.Component {
           paddingLeft: "20px",
           paddingRight: "20px",
           display: "flex",
-          alignItems:"flex-start",
+          flexDirection:"column-reverse",
           overflowY: "auto"
         }}
         onScroll={this.handleScroll}
