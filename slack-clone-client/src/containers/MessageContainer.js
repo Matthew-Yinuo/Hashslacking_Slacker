@@ -68,8 +68,10 @@ class MessageContainer extends React.Component {
       const heightBeforeRender = this.scroller.scrollHeight;
       // wait for 70 items to render
       setTimeout(() => {
+        if(this.scroller){
         this.scroller.scrollTop =
           this.scroller.scrollHeight - heightBeforeRender;
+        }
       }, 120);
     }
   }
