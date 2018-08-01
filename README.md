@@ -59,7 +59,7 @@ account and get started.
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+Build a Docker image and deploy it on your hosting site of choice. DigitalOcean, Vultr, AWS, etc.
 
 
 ## License
