@@ -1,4 +1,4 @@
-# Hashslacker slacker
+# Hashslacking slacker
 
 This repository contains a Slack clone app that it brought together through React, GraphQL, and NodeJS.
 
