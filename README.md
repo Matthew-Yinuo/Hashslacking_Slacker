@@ -1,6 +1,6 @@
-# Project Title
+# Hashslacker slacker
 
-One Paragraph of project description goes here
+This repository contains a Slack clone app that it brought together through React, GraphQL, and NodeJS.
 
 ## Getting Started
 
@@ -11,70 +11,56 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them
 
 ```
-Give examples
+Postgres 10.0+ (For local server)
+NodeJS (Talk to the server)
+Redis (Handle chat subscriptions)
+Docker(Image builder)
 ```
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
+Clone this project and update path accordingly:
 
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
+```sh
+git clone https://github.com/Matthew-Yinuo/slashin.git
+cd slashin
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+Install the dependencies:
 
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
+```sh
+yarn install
 ```
 
-### And coding style tests
+Note: if you don't have `yarn` installed, feel free to use `npm`.
 
-Explain what these tests test and why
+Open the `.index` in models folder and update the variables to your settings:
 
+```sh
+cd models index .code
 ```
-Give an example
+Go into the server folder and start the server:
+
+```sh
+cd slashin
+yarn start
 ```
+Go into the client folder and start the react app:
+
+```sh
+cd slashin-client
+yarn start
+```
+
+Open [http://localhost:3000/](http://localhost:3000/) to view it in the browser.
+
+Go to [http://localhost:3000/signup](http://localhost:3000/register) to create an
+account and get started.
 
 ## Deployment
 
 Add additional notes about how to deploy this on a live system
 
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## License
 
@@ -82,6 +68,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Shout out to Ben Awad for invaluable advice on Discord
